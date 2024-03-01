@@ -1,6 +1,4 @@
 #!/bin/bash
-yum install git -y
-git clone https://github.com/NielsVerhoevenPXL/online-boutique.git
 
 #install docker
 yum install docker -y
