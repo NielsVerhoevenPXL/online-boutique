@@ -8,7 +8,7 @@ while IFS= read -r line; do
 done < "ips"
 
 # Check if any of the IP addresses are already in /etc/hosts
-if ! grep -qF "${server1ip}" /etc/hosts || ! grep -qF "${server2ip}" /etc/hosts || ! grep -qF "${server3ip}" /etc/hosts || ! grep -qF "${server4ip}" /etc/hosts; then
+if grep -qF "${server1ip}" /etc/hosts ||  grep -qF "${server2ip}" /etc/hosts ||  grep -qF "${server3ip}" /etc/hosts ||  grep -qF "${server4ip}" /etc/hosts; then
     # If any of the IPs are not found in /etc/hosts, then append the entries
     echo "$server2ip  cartservice" | sudo tee -a /etc/hosts
     echo "$server2ip  shippingservice" | sudo tee -a /etc/hosts
