@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# lees ips uit bestand
 i=1
 while IFS= read -r line; do
     var="server${i}ip"
@@ -8,12 +7,16 @@ while IFS= read -r line; do
     i=$((i+1))
 done < "ips"
 
-# voeg hosts toe aan /etc/hosts
-echo "$server2ip  cartservice" | sudo tee -a /etc/hosts
-echo "$server2ip  shippingservice" | sudo tee -a /etc/hosts
-echo "$server2ip  currencyservice" | sudo tee -a /etc/hosts
-echo "$server3ip  checkoutservice" | sudo tee -a /etc/hosts
-echo "$server4ip  adservice" | sudo tee -a /etc/hosts
+# Check if any of the IP addresses are already in /etc/hosts
+if ! grep -qF "${server1ip}" /etc/hosts || ! grep -qF "${server2ip}" /etc/hosts || ! grep -qF "${server3ip}" /etc/hosts || ! grep -qF "${server4ip}" /etc/hosts; then
+    # If any of the IPs are not found in /etc/hosts, then append the entries
+    echo "$server2ip  cartservice" | sudo tee -a /etc/hosts
+    echo "$server2ip  shippingservice" | sudo tee -a /etc/hosts
+    echo "$server2ip  currencyservice" | sudo tee -a /etc/hosts
+    echo "$server3ip  checkoutservice" | sudo tee -a /etc/hosts
+    echo "$server4ip  adservice" | sudo tee -a /etc/hosts
+fi
+
 
 # maak een docker netwerk aan
 docker network create front-network
