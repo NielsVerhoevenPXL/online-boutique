@@ -8,9 +8,9 @@ if [ $(docker ps -q | wc -l) -gt 0 ]; then
     docker stop $(docker ps -q)
 fi
 
-docker run -d --rm --env-file ~/online-boutique/src/variables.env --env PORT=5050 --network checkout-network --name checkoutservice -p 5050:5050 public.ecr.aws/j1n2c2p2/microservices-demo/checkoutservice:latest
-docker run -d --rm --env-file ~/online-boutique/src/variables.env --env PORT=50051 --network checkout-network --name paymentservice -p 50051:50051 public.ecr.aws/j1n2c2p2/microservices-demo/paymentservice:latest
-docker run -d --rm --env-file ~/online-boutique/src/variables.env --env PORT=5000 --network checkout-network --name emailservice -p 5000:5000 public.ecr.aws/j1n2c2p2/microservices-demo/emailservice:latest
+docker run -d --rm --env-file variables.env --env PORT=5050 --network checkout-network --name checkoutservice -p 5050:5050 public.ecr.aws/j1n2c2p2/microservices-demo/checkoutservice:latest
+docker run -d --rm --env-file variables.env --env PORT=50051 --network checkout-network --name paymentservice -p 50051:50051 public.ecr.aws/j1n2c2p2/microservices-demo/paymentservice:latest
+docker run -d --rm --env-file variables.env --env PORT=5000 --network checkout-network --name emailservice -p 5000:5000 public.ecr.aws/j1n2c2p2/microservices-demo/emailservice:latest
 
 
 # get server IP addresses

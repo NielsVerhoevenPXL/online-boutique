@@ -9,11 +9,11 @@ if [ $(docker ps -q | wc -l) -gt 0 ]; then
 fi
 
 # run alle containers
-docker run -d --rm --env-file /home/ec2-user/online-boutique/src/variables.env --env PORT=80 --network front-network --name frontend -p 8080:80 public.ecr.aws/j1n2c2p2/microservices-demo/frontend:latest
+docker run -d --rm --env-file variables.env --env PORT=80 --network front-network --name frontend -p 8080:80 public.ecr.aws/j1n2c2p2/microservices-demo/frontend:latest
 
-docker run -d --rm --env-file /home/ec2-user/online-boutique/src/variables.env --env PORT=8081 --network front-network --name recommendationservice -p 8081:8081 public.ecr.aws/j1n2c2p2/microservices-demo/recommendationservice:latest
+docker run -d --rm --env-file variables.env --env PORT=8081 --network front-network --name recommendationservice -p 8081:8081 public.ecr.aws/j1n2c2p2/microservices-demo/recommendationservice:latest
 
-docker run -d --rm --env-file /home/ec2-user/online-boutique/src/variables.env --env PORT=3550 --network front-network --name productcatalogservice -p 3550:3550 public.ecr.aws/j1n2c2p2/microservices-demo/productcatalogservice:latest
+docker run -d --rm --env-file variables.env --env PORT=3550 --network front-network --name productcatalogservice -p 3550:3550 public.ecr.aws/j1n2c2p2/microservices-demo/productcatalogservice:latest
 
 # get server IP addresses
 i=1
