@@ -14,7 +14,7 @@
       docker_network:
         name: front-network
 
-    - name: Check if there are running containers and stop them
+    - name: Check if there are running containers
       shell: docker ps -q
       register: running_containers
       ignore_errors: yes
@@ -26,7 +26,8 @@
         state: stopped
       loop: "{{ running_containers.stdout_lines }}"
       when: running_containers.stdout_lines | length > 0
-    - name: Run frontend container
+      
+    - name: Create frontend container
       docker_container:
         name: frontend
         image: public.ecr.aws/j1n2c2p2/microservices-demo/frontend:latest
@@ -38,7 +39,7 @@
           - "8080:80"
         auto_remove: true
 
-    - name: Run recommendationservice container
+    - name: Create recommendationservice container
       docker_container:
         name: recommendationservice
         image: public.ecr.aws/j1n2c2p2/microservices-demo/recommendationservice:latest
@@ -50,7 +51,7 @@
           - "8081:8081"
         auto_remove: true
 
-    - name: Run productcatalogservice container
+    - name: Create productcatalogservice container
       docker_container:
         name: productcatalogservice
         image: public.ecr.aws/j1n2c2p2/microservices-demo/productcatalogservice:latest
