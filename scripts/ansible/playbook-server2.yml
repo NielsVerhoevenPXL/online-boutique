@@ -1,0 +1,26 @@
+---
+- name: Run Docker containers on best-server2
+  hosts: best-server2
+  become: yes
+  user: ec2-user
+  tasks:
+    - name: Create Docker network
+      command: docker network create cart-network
+      ignore_errors: yes
+
+    - name: Stop running containers if any
+      command: sh -c 'if [ $(docker ps -q | wc -l) -gt 0 ]; then docker stop $(docker ps -q); fi'
+
+    - name: Copy variables.env to server
+      copy:
+        src: variables.env
+        dest: ~/variables.env
+
+    - name: Run cartservice container
+      command: docker run -d --rm --env-file ~/variables.env --env PORT=7070 --network cart-network --name cartservice -p 7070:7070 public.ecr.aws/j1n2c2p2/microservices-demo/cartservice:latest
+
+    - name: Run shippingservice container
+      command: docker run -d --rm --env-file ~/variables.env --env PORT=50051 --network cart-network --name shippingservice -p 50051:50051 public.ecr.aws/j1n2c2p2/microservices-demo/shippingservice:latest
+
+    - name: Run currencyservice container
+      command: docker run -d --rm --env-file ~/variables.env --env PORT=7000  --network cart-network --name currencyservice -p 50000:50000 -p 60000:60000 -p 7000:7000 public.ecr.aws/j1n2c2p2/microservices-demo/currencyservice:latest
