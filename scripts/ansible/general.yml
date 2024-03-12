@@ -1,0 +1,32 @@
+---
+- name: General configuration of the servers
+  hosts: all
+  become: true
+  user: ec2-user
+
+  tasks:
+  - name: Update_cache
+    ansible.builtin.dnf:
+      update_cache: true
+
+  - name: Install docker
+    ansible.builtin.yum:
+      name: docker
+      state: present
+  
+  - name: Install git
+    ansible.builtin.yum:
+      name: git
+      state: present
+  
+  - name: Start docker service
+    ansible.builtin.service:
+      name: docker
+      state: started
+
+  - name: Add user to the 'docker' group
+    ansible.builtin.user:
+      name: "{{ ansible_user }}"
+      groups: docker
+      append: yes
+  
