@@ -1,5 +1,5 @@
 - name: Run Docker containers on best-server2
-  hosts: best-server2
+  hosts: best_server_2
   become: yes
   user: ec2-user
   tasks:
