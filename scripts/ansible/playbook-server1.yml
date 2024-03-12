@@ -1,6 +1,6 @@
 ---
 - name: Create everything for microservices
-  hosts: testserver
+  hosts: best_server_1
   become: yes
   become_user: root
   gather_facts: no
