@@ -1,6 +1,6 @@
 ---
 - name: General configuration of the servers
-  hosts: all
+  hosts: best_server
   become: true
   user: ec2-user
 
