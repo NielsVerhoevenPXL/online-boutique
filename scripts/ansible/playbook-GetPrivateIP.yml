@@ -12,9 +12,7 @@
     - name: Get private IP addresses of best-servers
       ec2_instance_info:
         region: us-east-1
-        aws_access_key_id: ASIAVRUVWKKM56DFQQ3G
-        aws_secret_access_key: 6mAV5qjm6E0kt16MXouNNBQ5n5lItUh+z19kS3P5
-        aws_session_token: FwoGZXIvYXdzEE8aDHFJE9SmaavwoCAUcyLPATyIyHNn+nejgQcQw35SoUu4OkxFFjOAPTAl/I0M4hxr4JrX94JibKV4mDSqDmcIIjEG9ZHdHc9Wot2Zb6Uxs2VcLR8cLZZkOTbTaURiyZurhOKLnHIZ55q87a62YPr86haHfLvMqtIeDuUwNrtx1Oethh50R4P9d/9pOzFLYNGArm8BQZimBmv46G8jAap+KIlXXM0TIZAtjeUUtOrRtcqcyb9U46XymdpJrtgskym3RqiA3/QbH9ifoC2nBXLlgTpsb3wVU1MarLuuNKrF5CjHqMGvBjItBxUzt6krj/UrZx6jxub8Ri4PRLFJFXjU/qvRsQxEkOz2sVXTAn+N3OMwoheK
+        # credentials toevoegen
         filters:
           "tag:Name": "{{ item }}"
       loop: "{{ servers }}"
