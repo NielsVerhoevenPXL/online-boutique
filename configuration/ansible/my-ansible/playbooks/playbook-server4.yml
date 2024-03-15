@@ -1,0 +1,64 @@
+---
+- name: Configure server 4 containers
+  hosts: best_server_4
+  user: ec2-user
+  gather_facts: false
+  vars_files:
+    ../host_vars/hosts.yml
+
+  tasks:
+    - name: Copy variables.env to best_server_4.
+      ansible.builtin.copy:
+        src: ../../variables.env
+        dest: ~/variables.env
+
+    - name: Create github directory
+      ansible.builtin.file:
+        path: ~/github
+        state: directory
+
+    - name: Clone github repo
+      ansible.builtin.git:
+        repo: https://github.com/NielsVerhoevenPXL/online-boutique.git
+        dest: ~/github/online-boutique
+
+    
+    - name: Create loadgenerator image
+      community.docker.docker_image:
+        build:
+          path: ~/github/online-boutique/src/loadgenerator
+        name: loadgenerator
+        tag: latest
+        source: build
+      
+    - name: Create docker network
+      community.docker.docker_network:
+        name: ad-network
+    
+    - name: Create docker load generator
+      community.docker.docker_container:
+        name: loadgenerator
+        image: loadgenerator
+        env:
+          FRONTEND_ADDR: "{{ server1 }}:8080"
+          USERS: "10"
+        network_mode: ad-network
+        etc_hosts:
+          frontend: "{{ server1 }}"
+        auto_remove: true
+        state: started
+
+    - name: Create docker ad service
+      community.docker.docker_container:
+        name: adservice
+        image: public.ecr.aws/j1n2c2p2/microservices-demo/adservice:latest
+        env_file: variables.env
+        env:
+          PORT: "9555"
+        network_mode: ad-network
+        ports:
+          - "9555:9555"
+        auto_remove: true
+        state: started
+
+    

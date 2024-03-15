@@ -1,0 +1,28 @@
+---
+- name: General configuration of the servers
+  hosts: best_servers
+  become: true
+  user: ec2-user
+
+  tasks:
+  - name: Install neccessary packages
+    ansible.builtin.dnf:
+      update_cache: true
+      name:
+        - docker
+        - git
+      state: present
+
+  - name: Start docker services
+    ansible.builtin.service:
+      name: docker
+      state: started
+      enabled: true
+
+  - name: Add user to docker group
+    ansible.builtin.user:
+      name: ec2-user
+      groups:
+        - docker
+      append: true
+      

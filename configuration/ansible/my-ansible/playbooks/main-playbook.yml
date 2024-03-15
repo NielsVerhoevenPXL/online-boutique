@@ -1,0 +1,23 @@
+---
+- name: Main playbook
+  hosts: localhost
+  tasks:
+    - name: Run general config playbook.
+      ansible.builtin.import_playbook:
+        name: general.yml
+
+    - name: Run server 1 config playbook.
+      ansible.builtin.import_playbook:
+        name: playbook-server1.yml
+
+    - name: Run server 2 config playbook.
+      ansible.builtin.import_playbook:
+        name: playbook-server2.yml
+
+    - name: Run server 3 config playbook.
+      ansible.builtin.import_playbook:
+        name: playbook-server3.yml
+
+    - name: Run server 4 config playbook.
+      ansible.builtin.import_playbook:
+        name: playbook-server4.yml
