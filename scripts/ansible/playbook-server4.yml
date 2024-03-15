@@ -67,7 +67,7 @@
         network_mode: ad-network
         state: started
 
-    - - name: Update /etc/hosts in loadgenerator container
-        docker_container_exec:
-          container: loadgenerator
-          command: sh -c "echo '{{ SERVER1IP }}  frontend' >> /etc/hosts"
+    - name: Update /etc/hosts in loadgenerator container
+      docker_container_exec:
+        container: loadgenerator
+        command: sh -c "echo '{{ SERVER1IP }}  frontend' >> /etc/hosts"
