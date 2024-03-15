@@ -3,6 +3,20 @@
   become: yes
   user: ec2-user
   tasks:
+    - name: Read IP addresses from ips file
+      ansible.builtin.file:
+        path: ips
+        state: 'file'
+      register: ip_addresses
+      changed_when: false
+
+    - name: Set the first IP address into a variable
+      set_fact:
+        SERVER1IP: "{{ ip_addresses.content | splitlines()[0] }}"
+        SERVER2IP: "{{ ip_addresses.content | splitlines()[1] }}"
+        SERVER3IP: "{{ ip_addresses.content | splitlines()[2] }}"
+        SERVER4IP: "{{ ip_addresses.content | splitlines()[3] }}"
+
     - name: Copy variables.env to server
       copy:
         src: variables.env
