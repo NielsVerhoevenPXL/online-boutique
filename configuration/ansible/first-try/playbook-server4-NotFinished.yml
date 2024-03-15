@@ -1,0 +1,59 @@
+- name: Run Docker containers on best-server4
+  hosts: best-server4
+  become: yes
+  user: ec2-user
+  tasks:
+    - name: Copy variables.env to server
+      copy:
+        src: variables.env
+        dest: ~/variables.env
+        
+    - name: Clone Online Boutique repository
+      git:
+        repo: https://github.com/NielsVerhoevenPXL/online-boutique.git
+        dest: /home/ec2-user/online-boutique
+    
+    - name: Create Docker network
+      docker_network:
+        name: ad-network
+      ignore_errors: yes
+
+    - name: Check if there are running containers
+      shell: docker ps -q
+      register: running_containers
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Stop running containers
+      docker_container:
+        name: "{{ item }}"
+        state: stopped
+      loop: "{{ running_containers.stdout_lines }}"
+      when: running_containers.stdout_lines | length > 0
+
+    - name: Run loadgenerator container
+      docker_container:
+        name: loadgenerator
+        image: loadgenerator
+        env:
+          FRONTEND_ADDR: "{{ SERVER1IP }}:8080"
+          USERS: "10"
+        network_mode: ad-network
+        state: started
+
+    - name: Run adservice container
+      docker_container:
+        name: adservice
+        image: public.ecr.aws/j1n2c2p2/microservices-demo/adservice:latest
+        env_file: ~/variables.env
+        environment:
+          PORT: "9555"
+        ports:
+          - "9555:9555"
+        network_mode: ad-network
+        state: started
+
+    - - name: Update /etc/hosts in loadgenerator container
+        docker_container_exec:
+          container: loadgenerator
+          command: sh -c "echo '{{ SERVER1IP }}  frontend' >> /etc/hosts"
